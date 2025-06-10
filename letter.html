@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Birthday Letter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      margin: 0;
+      background: linear-gradient(to right, #fbc2eb, #a6c1ee);
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      overflow: hidden;
+      color: #e91e63;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    .envelope-area {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 30px;
+      transition: all 1s ease;
+      flex-wrap: wrap;
+    }
+
+    .envelope {
+      position: relative;
+      width: 300px;
+      height: 220px;
+      cursor: pointer;
+      user-select: none;
+      transition: transform 1s ease;
+      box-shadow: 0 0 15px #ff69b4aa;
+      border-radius: 15px;
+      flex-shrink: 0;
+    }
+
+    /* Envelope PNG */
+    .envelope img {
+      width: 100%;
+      height: 100%;
+      border-radius: 15px;
+      display: block;
+    }
+
+    /* Heart icon in center */
+    .heart-center {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 48px;
+      color: hotpink;
+      text-shadow: 0 0 8px #ff69b4cc;
+      pointer-events: none;
+      user-select: none;
+      animation: heartBeat 1.5s infinite;
+    }
+
+    @keyframes heartBeat {
+      0%, 100% { transform: translate(-50%, -50%) scale(1); }
+      50% { transform: translate(-50%, -50%) scale(1.2); }
+    }
+
+    /* White paper */
+    .paper {
+      width: 0;
+      max-width: 600px;
+      max-height: 80vh;
+      overflow-y: auto;
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 0 25px rgba(0,0,0,0.3);
+      padding: 30px 25px;
+      font-family: 'Dancing Script', cursive;
+      font-size: 26px;
+      color: #e91e63;
+      line-height: 1.6;
+      white-space: pre-wrap;
+      transition: width 1s ease, max-height 1s ease, opacity 1s ease;
+      user-select: text;
+      box-sizing: border-box;
+      opacity: 0;
+      pointer-events: none;
+      flex-shrink: 0;
+    }
+
+    .paper.show {
+      width: 600px;
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    #message-text::after {
+      content: '|';
+      animation: blink 1s infinite;
+    }
+
+    @keyframes blink {
+      0%, 50%, 100% { opacity: 1; }
+      25%, 75% { opacity: 0; }
+    }
+
+    @media (max-width: 768px) {
+      .envelope-area {
+        flex-direction: column;
+        gap: 20px;
+      }
+      .paper.show {
+        width: 90vw;
+        max-height: 70vh;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <div class="envelope-area" id="envelopeArea">
+    <div class="envelope" id="envelope" onclick="revealMessage()" title="Click the heart to open your birthday message">
+      <img src="images/360_F_981843817_pxeidWR6HLHqbUPMY4SCAwSTqp841ujB-removebg-preview (1).png" alt="Envelope" />
+      <div class="heart-center" aria-hidden="true">❤️</div>
+    </div>
+    <div class="paper" id="paper" aria-live="polite" aria-atomic="true" aria-relevant="text">
+      <span id="message-text"></span>
+    </div>
+  </div>
+</div>
+
+<script>
+  const message = `Happy 18th Birthday, Meri Jaan! 💖🎉
+
+Aaj tumhara din hai, par mere liye har din tumse hi start hota hai aur tum par hi khatam.
+Main shayad lafzon mein poori tarah express nahi kar sakta, par main dil se kehna chahta hoon… I love you beyond words.
+
+Tumhari muskaan meri duniya hai,
+tumhari har khushi meri dua hai,
+aur tumhara saath mera sabse bada gift hai.
+
+18 saal ki ho gayi ho tum,
+lekin meri nazar mein tum hamesha meri cute si princess rahogi.
+Aaj se tum sirf ek saal badi nahi hui,
+tumhari value bhi mere liye aur zyada badh gayi hai. 🌹
+
+Main har birthday pe tumhare saath hoon,
+aur chahta hoon ke har birthday pe main hi sabse pehle tumhe wish karun,
+tumhe hug karun, aur bolun…
+"Tum meri ho, aur main hamesha tumhara rahunga." 💑
+
+Bas aise hi haste rehna, khilte rehna,
+aur apne is pagal lover ko kabhi bhoolna mat.
+You mean the world to me, meri zindagi tum ho. ❤
+
+Happy 18th, baby! Tumhara saath hi meri zindagi ka best gift hai. 🎂✨
+`;
+
+  let i = 0;
+  let typingStarted = false;
+
+  function revealMessage() {
+    if (typingStarted) return; // prevent multiple clicks
+    typingStarted = true;
+
+    const paper = document.getElementById('paper');
+    const envelope = document.getElementById('envelope');
+
+    // Slide envelope right and show paper
+    envelope.style.transform = 'translateX(15px)';
+    paper.classList.add('show');
+
+    const textEl = document.getElementById('message-text');
+    textEl.innerText = '';
+
+    let typing = setInterval(() => {
+      if (i < message.length) {
+        textEl.innerText += message.charAt(i);
+        i++;
+      } else {
+        clearInterval(typing);
+      }
+    }, 35);
+  }
+</script>
+
+</body>
+</html>

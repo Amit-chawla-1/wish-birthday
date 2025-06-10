@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Birthday Celebration</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(135deg, #000000, #1c1c1c);
+      color: #fff;
+      overflow-x: hidden;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .heart-pop {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background-color: hotpink;
+      clip-path: polygon(50% 0%, 100% 38%, 76% 100%, 50% 76%, 24% 100%, 0 38%);
+      opacity: 0.9;
+      animation: pop 0.8s ease-out forwards;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(0); opacity: 1; }
+      100% { transform: scale(1.5); opacity: 0; }
+    }
+
+    .message-overlay {
+      position: fixed;
+      top: 40%;
+      width: 100%;
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: bold;
+      background: linear-gradient(90deg, #ff9a9e, #fad0c4, #fad0c4);
+    background-clip: text;
+      -webkit-text-fill-color: transparent;
+      z-index: 5;
+      animation: fadeUp 1.5s ease-in-out;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .content {
+      display: none;
+      flex-direction: column;
+    }
+
+    .section {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
+      padding: 80px 10%;
+      flex-wrap: wrap;
+    }
+
+    .section img {
+      width: 300px;
+      border-radius: 20px;
+      box-shadow: 0 0 20px #ff69b4;
+    }
+
+    .section p {
+      max-width: 400px;
+      font-size: 1.2rem;
+      color: #ffd9f4;
+    }
+
+    .envelope-btn {
+      display: block;
+      margin: 50px auto;
+      padding: 20px 40px;
+      background: #ff69b4;
+      color: #fff;
+      font-size: 1.2rem;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 0 20px hotpink;
+      transition: 0.3s;
+    }
+
+    .envelope-btn:hover {
+      background: #ff1493;
+      transform: scale(1.05);
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="fireworks"></canvas>
+
+<!-- Fireworks message during animation -->
+<div class="message-overlay" id="fireworksMessage">
+  Finally, the wait is over... <br>Happy Birthday Meri Lifeline <P>💖🎉</P>
+</div>
+
+<!-- Hidden Content (Appears after 15 sec) -->
+<div class="content" id="mainContent">
+  <div class="section">
+    <p>Happy birthday to the most wonderful soul 💖. Your smile lights up my darkest days and I feel lucky every day to have you in my life.</p>
+    <img src="images/WhatsApp Image 2025-06-06 at 01.43.00_5986cc18.jpg" alt="Her Image">
+  </div>
+  <div class="section">
+    <img src="images/WhatsApp Image 2025-06-06 at 01.43.14_9a9ab064.jpg" alt="Her Image">
+    <p>You bring happiness wherever you go. Your presence is magical and your heart is gold. I cherish every moment with you.</p>
+  </div>
+  <div class="section">
+    <p>On this special day, I just want to say thank you — for being YOU. Beautiful, strong, kind, and loving. You are rare and precious.</p>
+    <img src="images/WhatsApp Image 2025-06-06 at 01.47.35_e88510f5.jpg" alt="Her Image">
+  </div>
+  <div class="section">
+    <img src="images/WhatsApp Image 2025-06-06 at 01.51.20_0055ec67.jpg" alt="Her Image">
+    <p>From your laugh to your love, everything about you makes my heart beat with joy. I hope your birthday is as lovely as you are 💕.</p>
+  </div>
+  <div class="section">
+    <p>We may not be perfect, but our bond is. With every day, I fall for you a little more. Happy Birthday, love 💝.</p>
+    <img src="images/WhatsApp Image 2025-06-06 at 01.51.20_dfa5164b.jpg" alt="Her Image">
+  </div>,
+  <button class="envelope-btn" onclick="window.location.href='letter.html'">💌 Open Your Letter</button>
+</div>
+
+<script>
+  const canvas = document.getElementById('fireworks');
+  const ctx = canvas.getContext('2d');
+  canvas.width = innerWidth;
+  canvas.height = innerHeight;
+
+  class Firework {
+    constructor(x, y, color) {
+      this.x = x;
+      this.y = y;
+      this.color = color;
+      this.radius = Math.random() * 3 + 2;
+      this.speed = Math.random() * 4 + 1;
+      this.angle = Math.random() * 2 * Math.PI;
+      this.life = 60;
+    }
+
+    update() {
+      this.x += Math.cos(this.angle) * this.speed;
+      this.y += Math.sin(this.angle) * this.speed;
+      this.life--;
+    }
+
+    draw() {
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
+      ctx.fillStyle = this.color;
+      ctx.fill();
+    }
+  }
+
+  let fireworks = [];
+
+  function explodeAtCorners() {
+    const positions = [
+      [100, 100],
+      [canvas.width - 100, 100],
+      [100, canvas.height - 100],
+      [canvas.width - 100, canvas.height - 100],
+      [canvas.width / 2, canvas.height / 2] // center
+    ];
+    const color = `hsl(${Math.random() * 360}, 100%, 60%)`;
+
+    positions.forEach(([x, y]) => {
+      for (let i = 0; i < 50; i++) {
+        fireworks.push(new Firework(x, y, color));
+      }
+    });
+  }
+
+  function animateFireworks() {
+    ctx.fillStyle = 'rgba(0,0,0,0.2)';
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+    fireworks = fireworks.filter(fw => fw.life > 0);
+    fireworks.forEach(fw => {
+      fw.update();
+      fw.draw();
+    });
+
+    if (fireworkActive) requestAnimationFrame(animateFireworks);
+  }
+
+  function createHeartPop() {
+    const heart = document.createElement('div');
+    heart.className = 'heart-pop';
+    heart.style.left = `${Math.random() * 100}vw`;
+    heart.style.top = `${Math.random() * 100}vh`;
+    heart.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 70%)`;
+    document.body.appendChild(heart);
+
+    setTimeout(() => {
+      heart.remove();
+    }, 800);
+  }
+
+  let fireworkActive = true;
+  animateFireworks();
+  let fireworkInterval = setInterval(explodeAtCorners, 1200);
+  let heartInterval = setInterval(createHeartPop, 200);
+
+  setTimeout(() => {
+    fireworkActive = false;
+    clearInterval(fireworkInterval);
+    clearInterval(heartInterval);
+    document.getElementById('fireworks').style.display = 'none';
+    document.getElementById('fireworksMessage').style.display = 'none';
+    document.getElementById('mainContent').style.display = 'flex';
+  }, 15000);
+</script>
+</body>
+</html>
